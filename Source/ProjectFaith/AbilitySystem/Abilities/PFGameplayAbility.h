@@ -28,11 +28,11 @@ enum class EPFAbilityActivationGroup : uint8
 	//Ability runs independently
 	Independent,
 
-	//Ability is cancelled and replaced by other exlusive abilities.
-	Exlusive_Replaceable,
+	//Ability is cancelled and replaced by other exclusive abilities.
+	Exclusive_Replaceable,
 
-	//Ability blocks all other exlusive abilities from activating.
-	Exlusive_Blocking,
+	//Ability blocks all other exclusive abilities from activating.
+	Exclusive_Blocking,
 
 	MAX UMETA(Hidden)
 };
@@ -56,7 +56,11 @@ public:
 };
 
 
-
+/**
+ * UPFGameplayAbility
+ *
+ *	The base gameplay ability class used by this project.
+ */
 UCLASS(Abstract, HideCategories = Input, Meta = (ShortToolTip = "Base gameplay ability class used in this project."))
 class PROJECTFAITH_API UPFGameplayAbility : public UGameplayAbility
 {
@@ -68,8 +72,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "PF|Ability")
 	UPFAbilitySystemComponent* GetPFAbilitySystemComponentFromActorInfo() const;
-
-	//UFUNCTION(BlueprintCallable, Category = "PF|Ability")
+	
 	
 
 };

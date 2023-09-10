@@ -3,3 +3,12 @@
 
 #include "PFPlayerController.h"
 
+#include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
+
+
+APFPlayerController::APFPlayerController(const FObjectInitializer& ObjectInitializer)
+	:Super(ObjectInitializer)
+{
+	
+}
+
