@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagAssetInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 
 #include "PFCharacter.generated.h"
@@ -21,6 +22,23 @@ struct FGameplayTag;
 struct FGameplayTagContainer;
 
 
+/**
+ * PFReplicatedAcceleration : Compressed representation of acceleration
+ */
+USTRUCT()
+struct FPFReplicatedAcceleration
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	uint8 AccelXYRadians = 0;	// Direction of XY accel component, quantized to represent [0, 2*pi]
+
+	UPROPERTY()
+	uint8 AccelXYMagnitude = 0;	//Accel rate of XY component, quantized to represent [0, MaxAcceleration]
+
+	UPROPERTY()
+	int8 AccelZ = 0;	// Raw Z accel rate component, quantized to represent [-MaxAcceleration, MaxAcceleration]
+};
 
 UCLASS(Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
 class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface
@@ -44,12 +62,18 @@ public:
 	virtual bool HasAllMatchingGameplayTags(const FGameplayTagContainer& TagContainer) const override;
 	virtual bool HasAnyMatchingGameplayTags(const FGameplayTagContainer& TagContainer) const override;
 
-	
-	
+	void ToggleCrouch();
 
-protected:
-	// Called when the game starts or when spawned
+	//~AActor interface
+	virtual void PreInitializeComponents() override;
 	virtual void BeginPlay() override;
+	virtual void Reset() override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~End of AActor interface
+	protected:
+
+	virtual void OnAbiltySystemInitialized();
+
 
 public:	
 	// Called every frame
@@ -57,9 +81,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-private:
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF|Character", Meta = (AllowPrivateAccess = "true"))
-
-
 };
+
+
+
