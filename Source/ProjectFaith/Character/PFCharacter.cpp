@@ -3,6 +3,7 @@
 
 #include "PFCharacter.h"
 
+#include "PFCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 #include "ProjectFaith/Player/PFPlayerController.h"
@@ -83,6 +84,42 @@ bool APFCharacter::HasAnyMatchingGameplayTags(const FGameplayTagContainer& TagCo
 	return false;
 }
 
+void APFCharacter::ToggleCrouch()
+{
+	const UPFCharacterMovementComponent* PFMoveComp = CastChecked<UPFCharacterMovementComponent>(GetCharacterMovement());
+
+	if (bIsCrouched || PFMoveComp->bWantsToCrouch)
+	{
+		UnCrouch();
+	} else if (PFMoveComp->IsMovingOnGround())
+	{
+		Crouch();
+	}
+}
+
+void APFCharacter::PreInitializeComponents()
+{
+	Super::PreInitializeComponents();
+}
+
+void APFCharacter::Reset()
+{
+	
+}
+
+void APFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
+void APFCharacter::OnAbiltySystemInitialized()
+{
+	UPFAbilitySystemComponent* PFASC = GetPFAbilitySystemComponent();
+	check(PFASC);
+
+	
+}
+
 
 // Called when the game starts or when spawned
 void APFCharacter::BeginPlay()
@@ -104,4 +141,8 @@ void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+// void APFCharacter::OnRep_MyTeamID(FGenericTeamId OldTeamID)
+// {
+// }
 
