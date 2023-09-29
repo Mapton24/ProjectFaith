@@ -9,6 +9,12 @@
 APFPlayerController::APFPlayerController(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
+	bReplicates = true;
 	
+}
+
+void APFPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
 }
 

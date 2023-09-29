@@ -3,10 +3,10 @@
 
 #include "PFHealthComponent.h"
 
+#include "ProjectFaith/PFLogChannels.h"
 #include "GameplayEffectExtension.h"
-#include "GameplayTags.h"
-#include "Net/UnrealNetwork.h"
 #include "ProjectFaith/PFGameplayTags.h"
+#include "Net/UnrealNetwork.h"
 #include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 #include "ProjectFaith/Attributes/PFHealthSet.h"
 
@@ -33,26 +33,34 @@ void UPFHealthComponent::InitializeWithAbilitySystem(UPFAbilitySystemComponent* 
 
 	if (AbilitySystemComponent)
 	{
-		//TODO create log system - Health component has already been initialized
+		UE_LOG(LogPF, Error, TEXT("PFHealthComponent: Health component for owner [%s] has already been initialized with an ability system."), *GetNameSafe(Owner));
 		return;
 	}
 	AbilitySystemComponent = InASC;
 	if (!AbilitySystemComponent)
 	{
-		//TODO create log system - Health component can't be initialize on null
+		UE_LOG(LogPF, Error, TEXT("PFHealthComponent: Cannot initialize health component for owner [%s] with NULL ability system."), *GetNameSafe(Owner));
 		return;
 	}
 	HealthSet = AbilitySystemComponent->GetSet<UPFHealthSet>();
 	if (!HealthSet)
 	{
-		//TODO create log system - Health component can't be intialized if HealthSet is null
+		UE_LOG(LogPF, Error, TEXT("PFHealthComponent: Cannot initialize health component for owner [%s] with NULL health set on the ability system."), *GetNameSafe(Owner));
 		return;
 	}
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UPFHealthSet::GetHealthAttribute()).AddUObject(this, &ThisClass::HandleHealthChanged);
-	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UPFHealthSet::GetMaxHealthAttribute()).AddUObject(this, &ThisClass::HandleMaxHealthChanged);
+	HealthSet->OnOutOfHealth.AddUObject(this, &ThisClass::HandleOutOfHealth);
 
-	
+
+	// Reset attributes to default values.
+	AbilitySystemComponent->SetNumericAttributeBase(UPFHealthSet::GetHealthAttribute(), HealthSet->GetMaxHealth());
+
+	ClearGameplayTags();
+
+	OnHealthChanged.Broadcast(this, HealthSet->GetHealth(), HealthSet->GetHealth(), nullptr);
+	OnMaxHealthChanged.Broadcast(this, HealthSet->GetMaxHealth(), HealthSet->GetMaxHealth(), nullptr);
 }
 
 float UPFHealthComponent::GetHealth() const
@@ -65,12 +73,59 @@ float UPFHealthComponent::GetMaxHealth() const
 	return (HealthSet ? HealthSet->GetMaxHealth() : 0.0f);
 }
 
-void UPFHealthComponent::StartDeath()
+float UPFHealthComponent::GetHealthNormalized() const
 {
+	if (HealthSet)
+	{
+		const float Health = HealthSet->GetHealth();
+		const float MaxHealth = HealthSet->GetMaxHealth();
+
+		return ((MaxHealth > 0.0f) ? (Health/MaxHealth) : 0.0f);
+	}
+	return 0.0f;
 }
 
-void UPFHealthComponent::FinishState()
+void UPFHealthComponent::StartDeath()
 {
+	if (DeathState != EPFDeathState::NotDead)
+	{
+		return;
+	}
+
+	DeathState = EPFDeathState::DeathStarted;
+
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->SetLooseGameplayTagCount(PFGameplayTags::Status_Death_Dying, 1);
+	}
+
+	AActor* Owner = GetOwner();
+	check(Owner);
+
+	OnDeathStarted.Broadcast(Owner);
+}
+
+void UPFHealthComponent::FinishDeath()
+{
+	if (DeathState != EPFDeathState::DeathStarted)
+	{
+		return;
+	}
+
+	DeathState = EPFDeathState::DeathFinished;
+
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->SetLooseGameplayTagCount(PFGameplayTags::Status_Death_Dead, 1);
+	}
+
+	AActor* Owner = GetOwner();
+	check(Owner);
+
+	OnDeathFinished.Broadcast(Owner);
+
+	Owner->ForceNetUpdate();
+	
 }
 
 void UPFHealthComponent::OnRep_DeathState(EPFDeathState OldDeathState)
@@ -113,6 +168,28 @@ void UPFHealthComponent::HandleHealthChanged(const FOnAttributeChangeData& Chang
 void UPFHealthComponent::HandleMaxHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
 	OnMaxHealthChanged.Broadcast(this, ChangeData.OldValue, ChangeData.NewValue, GetInstigatorFromAttrChangeData(ChangeData));
+}
+
+void UPFHealthComponent::HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser,
+	const FGameplayEffectSpec& DamageEffectSpec, float DamageMagnitude)
+{
+
+	//GameplayEvent.Death - can be used to trigger death gameplay ability.
+	if (AbilitySystemComponent)
+	{
+		FGameplayEventData Payload;
+		Payload.EventTag = PFGameplayTags::GameplayEvent_Death;
+		Payload.Instigator = DamageInstigator;
+		Payload.Target = AbilitySystemComponent->GetAvatarActor();
+		Payload.OptionalObject = DamageEffectSpec.Def;
+		Payload.ContextHandle = DamageEffectSpec.GetEffectContext();
+		Payload.InstigatorTags = *DamageEffectSpec.CapturedSourceTags.GetAggregatedTags();
+		Payload.TargetTags = *DamageEffectSpec.CapturedTargetTags.GetAggregatedTags();
+		Payload.EventMagnitude = DamageMagnitude;
+
+		FScopedPredictionWindow NewScopedWindow(AbilitySystemComponent, true);
+		AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
+	}
 }
 
 void UPFHealthComponent::ClearGameplayTags()

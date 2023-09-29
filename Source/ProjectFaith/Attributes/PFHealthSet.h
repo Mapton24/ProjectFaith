@@ -28,10 +28,12 @@ class PROJECTFAITH_API UPFHealthSet : public UPFAttributeSet
 public:
 	UPFHealthSet();
 
-	 ATTRIBUTE_ACCESSORS(UPFHealthSet, Health);
-	 ATTRIBUTE_ACCESSORS(UPFHealthSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UPFHealthSet, Health);
+	ATTRIBUTE_ACCESSORS(UPFHealthSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UPFHealthSet, Healing);
+	ATTRIBUTE_ACCESSORS(UPFHealthSet, Damage);
 
-	mutable FLyraAttributeEvent OnOutOfResource;
+	mutable FLyraAttributeEvent OnOutOfHealth;
 
 protected:
 	UFUNCTION()

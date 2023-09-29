@@ -12,11 +12,10 @@
 
 class AActor;
 class AController;
-class APFPlayerController;
-class UInputComponent;
 class UPFAbilitySystemComponent;
 class UAbilitySystemComponent;
 class UObject;
+class UPFHealthComponent;
 struct FFrame;
 struct FGameplayTag;
 struct FGameplayTagContainer;
@@ -40,17 +39,14 @@ struct FPFReplicatedAcceleration
 	int8 AccelZ = 0;	// Raw Z accel rate component, quantized to represent [-MaxAcceleration, MaxAcceleration]
 };
 
-UCLASS(Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
+UCLASS(Abstract, Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
 class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	APFCharacter(const FObjectInitializer& ObjectInitializer);
-
-	UFUNCTION(BlueprintCallable, Category = "PF|Character")
-	APFPlayerController* GetPFPlayerController() const;
+	APFCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(Blueprintable, Category = "PF|Character")
 	UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const;
@@ -70,17 +66,44 @@ public:
 	virtual void Reset() override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	//~End of AActor interface
-	protected:
+
+protected:
 
 	virtual void OnAbiltySystemInitialized();
+	
+	void InitializeGameplayTags();
+
+	//virtual void FellOutOfWorld(const UDamageType& dmgType) override;
+	UFUNCTION()
+	virtual void OnDeathStarted(AActor* OwningActor);
+	UFUNCTION()
+	virtual void OnDeathFinished(AActor* OwningActor);
+
+	void DisableMovementAndCollision();
+	void DestroyDueToDeath();
+	void UninitAndDestroy();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
+	void K2_OnDeathFinished();
 
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+protected:
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF|Character", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UPFHealthComponent> HealthComponent;
+
+	// UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)
+	// FGenericTeamId MyTeamID;
+
+private:
+
+	// UFUNCTION()
+	// void OnRep_MyTeamID(FGenericTeamId OldTeamID);
+
 };
 
 

@@ -10,10 +10,11 @@
 struct FGenericTeamId;
 
 class APawn;
-class UPFAbilitySystemComponent;
-class UObject;
-class UPlayer;
+class UEnhancedInputComponent;
+class UInputAction;
+class UInputMappingContext;
 struct FFrame;
+struct FInputActionValue;
 
 /**
  * 
@@ -25,9 +26,5 @@ class PROJECTFAITH_API APFPlayerController : public APlayerController
 
 public:
 	APFPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	//UFUNCTION(BlueprintCallable, Category = "PF|PlayerController")
-	//UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const;
-	
-	
+	virtual void PlayerTick(float DeltaTime) override;
 };
