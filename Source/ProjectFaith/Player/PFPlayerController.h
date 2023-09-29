@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
 
 #include "PFPlayerController.generated.h"
@@ -27,4 +28,22 @@ class PROJECTFAITH_API APFPlayerController : public APlayerController
 public:
 	APFPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	virtual void PlayerTick(float DeltaTime) override;
+
+private:
+	void Move(const FInputActionValue& ActionValue);
+
+
+protected:
+
+	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
+
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputMappingContext> PFContext;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> MoveAction;
+
+	
 };

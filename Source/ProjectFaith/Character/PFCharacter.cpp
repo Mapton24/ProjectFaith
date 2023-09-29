@@ -36,7 +36,7 @@ APFCharacter::APFCharacter(const FObjectInitializer& ObjectInitializer)
 	HealthComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
 
 	GetCharacterMovement()->bConstrainToPlane = true;
-	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(1.0f, 0.0f, 0.0f));
+	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
 }
 
 UPFAbilitySystemComponent* APFCharacter::GetPFAbilitySystemComponent() const
