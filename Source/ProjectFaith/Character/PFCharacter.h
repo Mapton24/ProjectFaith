@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameplayTagAssetInterface.h"
-#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 
 #include "PFCharacter.generated.h"
@@ -14,6 +14,7 @@ class AActor;
 class AController;
 class UPFAbilitySystemComponent;
 class UAbilitySystemComponent;
+class UAttributeSet;
 class UObject;
 class UPFHealthComponent;
 struct FFrame;
@@ -40,7 +41,7 @@ struct FPFReplicatedAcceleration
 };
 
 UCLASS(Abstract, Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
-class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface
+class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -51,6 +52,7 @@ public:
 	UFUNCTION(Blueprintable, Category = "PF|Character")
 	UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//Interface of GameplayTagAssetInterface
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
@@ -90,6 +92,10 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 
 private:
 

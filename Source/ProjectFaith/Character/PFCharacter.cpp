@@ -45,8 +45,7 @@ UPFAbilitySystemComponent* APFCharacter::GetPFAbilitySystemComponent() const
 }
 UAbilitySystemComponent* APFCharacter::GetAbilitySystemComponent() const
 {
-	//TODO Might crash whole game
-	return GetAbilitySystemComponent();
+	return AbilitySystemComponent;
 }
 
 void APFCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
