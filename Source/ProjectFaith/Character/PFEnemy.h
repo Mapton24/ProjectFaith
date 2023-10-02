@@ -4,14 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "PFCharacter.h"
-#include "PFCharacterEnemy.generated.h"
+#include "PFEnemy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTFAITH_API APFCharacterEnemy : public APFCharacter
+class PROJECTFAITH_API APFEnemy : public APFCharacter
 {
 	GENERATED_BODY()
+
+public:
+
+	APFEnemy();
+	virtual void BeginPlay() override;
+	
 	
 };
