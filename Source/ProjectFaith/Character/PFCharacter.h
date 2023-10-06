@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameplayTagAssetInterface.h"
-#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 
 #include "PFCharacter.generated.h"
@@ -12,11 +12,11 @@
 
 class AActor;
 class AController;
-class APFPlayerController;
-class UInputComponent;
 class UPFAbilitySystemComponent;
 class UAbilitySystemComponent;
+class UAttributeSet;
 class UObject;
+class UPFHealthComponent;
 struct FFrame;
 struct FGameplayTag;
 struct FGameplayTagContainer;
@@ -40,21 +40,19 @@ struct FPFReplicatedAcceleration
 	int8 AccelZ = 0;	// Raw Z accel rate component, quantized to represent [-MaxAcceleration, MaxAcceleration]
 };
 
-UCLASS(Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
-class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface
+UCLASS(Abstract, Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
+class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	APFCharacter(const FObjectInitializer& ObjectInitializer);
-
-	UFUNCTION(BlueprintCallable, Category = "PF|Character")
-	APFPlayerController* GetPFPlayerController() const;
+	APFCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(Blueprintable, Category = "PF|Character")
 	UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//Interface of GameplayTagAssetInterface
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
@@ -70,17 +68,48 @@ public:
 	virtual void Reset() override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	//~End of AActor interface
-	protected:
+
+protected:
 
 	virtual void OnAbiltySystemInitialized();
+	
+	void InitializeGameplayTags();
+
+	//virtual void FellOutOfWorld(const UDamageType& dmgType) override;
+	UFUNCTION()
+	virtual void OnDeathStarted(AActor* OwningActor);
+	UFUNCTION()
+	virtual void OnDeathFinished(AActor* OwningActor);
+
+	void DisableMovementAndCollision();
+	void DestroyDueToDeath();
+	void UninitAndDestroy();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
+	void K2_OnDeathFinished();
 
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+protected:
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF|Character", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UPFHealthComponent> HealthComponent;
+
+	// UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)
+	// FGenericTeamId MyTeamID;
+
+private:
+
+	// UFUNCTION()
+	// void OnRep_MyTeamID(FGenericTeamId OldTeamID);
+
 };
 
 

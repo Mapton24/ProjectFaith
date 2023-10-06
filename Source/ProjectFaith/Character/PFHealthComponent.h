@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "GameplayEffectTypes.h"
 #include "Components/GameFrameworkComponent.h"
 #include "PFHealthComponent.generated.h"
@@ -27,7 +28,7 @@ enum class EPFDeathState : uint8
 	DeathFinished
 };
 /**
- * 
+ * Actor component used to handle anything related to health.
  */
 UCLASS()
 class PROJECTFAITH_API UPFHealthComponent : public UGameFrameworkComponent
@@ -51,14 +52,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category= "PF|Health")
 	float GetMaxHealth() const;
 
+	UFUNCTION(BlueprintCallable, Category = "PF|Health")
+	float GetHealthNormalized() const;
+
+	UFUNCTION(BlueprintCallable, Category = "PF|Health")
+	EPFDeathState GetDeathState() const {return DeathState;}
+
+	UFUNCTION(BlueprintCallable, BlueprintPure = fales, Category = "PF|Health", Meta = (ExpandBoolAsExecs = "ReturnValue"))
+	bool IsDeadOrDying() const {return (DeathState > EPFDeathState::NotDead); }
+
 	//Begins the death sequence for the owner.
 	virtual void StartDeath();
 
 	//End the death sequence for the owner.
-	virtual void FinishState();
-
-
-	
+	virtual void FinishDeath();
 
 public:
 
@@ -77,23 +84,17 @@ public:
 	//Delegate fired when the death sequence has finished.
 	UPROPERTY(BlueprintAssignable)
 	FPFHealth_DeathEvent OnDeathFinished;
-	
 
-	
-
-	
-
-	
 protected:
 
 	void ClearGameplayTags();
 	
 	virtual void HandleHealthChanged(const FOnAttributeChangeData& ChangeData);
 	virtual void HandleMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
+	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec& DamageEffectSpec, float DamageMagnitude);
 
 	UFUNCTION()
 	virtual void OnRep_DeathState(EPFDeathState OldDeathState);
-
 
 protected:
 
@@ -108,8 +109,4 @@ protected:
 	//Replicated state used to handle dying.
 	UPROPERTY(ReplicatedUsing = OnRep_DeathState)
 	EPFDeathState DeathState;
-
-	
-	
-	
 };

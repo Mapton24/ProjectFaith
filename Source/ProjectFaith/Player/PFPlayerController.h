@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
 
 #include "PFPlayerController.generated.h"
@@ -10,10 +11,11 @@
 struct FGenericTeamId;
 
 class APawn;
-class UPFAbilitySystemComponent;
-class UObject;
-class UPlayer;
+class UEnhancedInputComponent;
+class UInputAction;
+class UInputMappingContext;
 struct FFrame;
+struct FInputActionValue;
 
 /**
  * 
@@ -25,9 +27,23 @@ class PROJECTFAITH_API APFPlayerController : public APlayerController
 
 public:
 	APFPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	virtual void PlayerTick(float DeltaTime) override;
 
-	//UFUNCTION(BlueprintCallable, Category = "PF|PlayerController")
-	//UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const;
-	
+private:
+	void Move(const FInputActionValue& ActionValue);
+
+
+protected:
+
+	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
+
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputMappingContext> PFContext;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> MoveAction;
+
 	
 };

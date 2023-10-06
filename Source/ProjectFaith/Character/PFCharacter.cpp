@@ -4,9 +4,10 @@
 #include "PFCharacter.h"
 
 #include "PFCharacterMovementComponent.h"
+#include "PFHealthComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "ProjectFaith/PFGameplayTags.h"
 #include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
-#include "ProjectFaith/Player/PFPlayerController.h"
 
 // Sets default values
 
@@ -29,14 +30,13 @@ APFCharacter::APFCharacter(const FObjectInitializer& ObjectInitializer)
 	FVector NewLocation = MeshComponent->GetComponentLocation();
 	NewLocation.Z = -88.00f;
 	MeshComponent->SetWorldLocation(NewLocation);
-	
-	
-	
-}
 
-APFPlayerController* APFCharacter::GetPFPlayerController() const
-{
-	return CastChecked<APFPlayerController>(Controller, ECastCheckedType::NullAllowed);
+	HealthComponent = CreateDefaultSubobject<UPFHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
+	HealthComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
+
+	GetCharacterMovement()->bConstrainToPlane = true;
+	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
 }
 
 UPFAbilitySystemComponent* APFCharacter::GetPFAbilitySystemComponent() const
@@ -45,8 +45,7 @@ UPFAbilitySystemComponent* APFCharacter::GetPFAbilitySystemComponent() const
 }
 UAbilitySystemComponent* APFCharacter::GetAbilitySystemComponent() const
 {
-	//TODO Might crash whole game
-	return GetAbilitySystemComponent();
+	return AbilitySystemComponent;
 }
 
 void APFCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
@@ -117,9 +116,10 @@ void APFCharacter::OnAbiltySystemInitialized()
 	UPFAbilitySystemComponent* PFASC = GetPFAbilitySystemComponent();
 	check(PFASC);
 
-	
-}
+	HealthComponent->InitializeWithAbilitySystem(PFASC);
 
+	InitializeGameplayTags();
+}
 
 // Called when the game starts or when spawned
 void APFCharacter::BeginPlay()
@@ -128,21 +128,73 @@ void APFCharacter::BeginPlay()
 	
 }
 
-// Called every frame
-void APFCharacter::Tick(float DeltaTime)
+void APFCharacter::InitializeGameplayTags()
 {
-	Super::Tick(DeltaTime);
-
+	//Clear tags that might be lingering on the ability system from the previous pawn.
+	if (UPFAbilitySystemComponent* PFASC = GetPFAbilitySystemComponent())
+	{
+		for (const TPair<uint8, FGameplayTag>& TagMapping : PFGameplayTags::MovementModeTagMap)
+		{
+			if(TagMapping.Value.IsValid())
+			{
+				PFASC->SetLooseGameplayTagCount(TagMapping.Value, 0);
+			}
+		}
+		for (const TPair<uint8, FGameplayTag> TagMapping : PFGameplayTags::CustomMovementModeTagMap)
+		{
+			if(TagMapping.Value.IsValid())
+			{
+				PFASC->SetLooseGameplayTagCount(TagMapping.Value, 0);
+			}
+		}
+		UPFCharacterMovementComponent* PFMoveComp = CastChecked<UPFCharacterMovementComponent>(GetCharacterMovement());
+		//TODO SetMovementModeTag
+	}
+	
 }
 
-// Called to bind functionality to input
-void APFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APFCharacter::OnDeathStarted(AActor* OwningActor)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	DisableMovementAndCollision();
 }
 
-// void APFCharacter::OnRep_MyTeamID(FGenericTeamId OldTeamID)
-// {
-// }
+void APFCharacter::OnDeathFinished(AActor* OwningActor)
+{
+	//GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ThisClass::DestroyDueToDeath);
+}
+
+void APFCharacter::DisableMovementAndCollision()
+{
+	if (Controller)
+	{
+		Controller->SetIgnoreMoveInput(true);
+	}
+
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToChannels(ECR_Ignore);
+
+	UPFCharacterMovementComponent* PFMoveComp = CastChecked<UPFCharacterMovementComponent>(GetCharacterMovement());
+	check(PFMoveComp);
+	PFMoveComp->StopMovementImmediately();
+	PFMoveComp->DisableMovement();
+}
+
+void APFCharacter::DestroyDueToDeath()
+{
+	K2_OnDeathFinished();
+	UninitAndDestroy();
+}
+
+void APFCharacter::UninitAndDestroy()
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		DetachFromControllerPendingDestroy();
+		SetLifeSpan(0.1f);
+	}
+	SetActorHiddenInGame(true);
+}
+
 

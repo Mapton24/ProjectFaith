@@ -73,8 +73,10 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
-# Animations
+# Mine
 Content/Characters/Heroes/GitIgnoreTest
 Content/Animations
+Content/Meshes
+Content/StarterContent
 
 

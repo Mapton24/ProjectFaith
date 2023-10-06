@@ -4,8 +4,9 @@
 #include "PFPlayerState.h"
 
 #include "Net/UnrealNetwork.h"
-#include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 #include "Engine/World.h"
+#include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
+#include "ProjectFaith/Attributes/PFAttributeSet.h"
 
 class AController;
 class APlayerState;
@@ -17,6 +18,10 @@ APFPlayerState::APFPlayerState(const FObjectInitializer& ObjectInitializer)
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UPFAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	AttributeSet = CreateDefaultSubobject<UPFAttributeSet>("AttributeSet");
+	NetUpdateFrequency = 100.f;
+	
 }
 
 void APFPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

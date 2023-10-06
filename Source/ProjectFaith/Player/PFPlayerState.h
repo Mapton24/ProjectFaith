@@ -7,6 +7,9 @@
 #include "GameFramework/PlayerState.h"
 #include "PFPlayerState.generated.h"
 
+class UAbilitySystemComponent;
+class UAttributeSet;
+
 
 /** This defines the player type, if it's either active or not */
 UENUM()
@@ -29,7 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "PF|PlayerState")
 	UPFAbilitySystemComponent* GetPFAbilitySystemComponent() const { return AbilitySystemComponent; }
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	//Actor interface
 	virtual void PreInitializeComponents() override;
@@ -45,11 +50,11 @@ public:
 	void SetPlayerConnectionType(EPFPlayerConnectionType NewType);
 	EPFPlayerConnectionType GetPlayerConnectionType() const { return MyPlayerConnectionType; }
 
-	
-
 private:
 	UPROPERTY(VisibleAnywhere, Category = "PF|PlayerState")
 	TObjectPtr<UPFAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 
 	UPROPERTY(Replicated)
 	EPFPlayerConnectionType MyPlayerConnectionType;
