@@ -37,6 +37,10 @@ APFCharacter::APFCharacter(const FObjectInitializer& ObjectInitializer)
 
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
+
+	RightHandWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	RightHandWeapon->SetupAttachment(GetMesh(), FName("RightHandWeaponSocket"));
+	RightHandWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 UPFAbilitySystemComponent* APFCharacter::GetPFAbilitySystemComponent() const

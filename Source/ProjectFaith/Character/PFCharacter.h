@@ -91,7 +91,7 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	TObjectPtr<USkeletalMeshComponent> Weapon;
+	TObjectPtr<USkeletalMeshComponent> RightHandWeapon;
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
