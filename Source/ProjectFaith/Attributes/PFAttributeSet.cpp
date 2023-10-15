@@ -8,7 +8,7 @@
 
 UPFAttributeSet::UPFAttributeSet()
 {
-	InitHealth(50.f);
+	InitHealth(5.f);
 	InitMaxHealth(100.f);
 	InitMana(60.f);
 	InitMaxMana(100.f);

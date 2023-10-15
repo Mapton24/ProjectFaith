@@ -2,8 +2,13 @@
 
 
 #include "PFCharacterMain.h"
+
+#include "AbilitySystemComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "ProjectFaith/Player/PFPlayerController.h"
+#include "ProjectFaith/Player/PFPlayerState.h"
+#include "ProjectFaith/UI/HUD/PFHUD.h"
 
 APFCharacterMain::APFCharacterMain()
 {
@@ -13,5 +18,36 @@ APFCharacterMain::APFCharacterMain()
 
 	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom);
+	
+}
+
+void APFCharacterMain::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	InitAbilityActorInfo();
+}
+
+void APFCharacterMain::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	InitAbilityActorInfo();
+
+}
+
+void APFCharacterMain::InitAbilityActorInfo()
+{
+	PFPlayerState = GetPlayerState<APFPlayerState>();
+	check(PFPlayerState);
+	PFPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(PFPlayerState, this);
+	AbilitySystemComponent = PFPlayerState->GetAbilitySystemComponent();
+	AttributeSet = PFPlayerState->GetAttributeSet();
+
+	if (APFPlayerController* PFPlayerController = Cast<APFPlayerController>(GetController()))
+	{
+		if (APFHUD* PFHUD = Cast<APFHUD>(PFPlayerController->GetHUD()))
+		{
+			PFHUD->InitOverlay(PFPlayerController, PFPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
 	
 }
