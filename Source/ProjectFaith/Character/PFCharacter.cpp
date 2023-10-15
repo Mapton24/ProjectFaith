@@ -31,9 +31,9 @@ APFCharacter::APFCharacter(const FObjectInitializer& ObjectInitializer)
 	NewLocation.Z = -88.00f;
 	MeshComponent->SetWorldLocation(NewLocation);
 
-	HealthComponent = CreateDefaultSubobject<UPFHealthComponent>(TEXT("HealthComponent"));
-	HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
-	HealthComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
+	// HealthComponent = CreateDefaultSubobject<UPFHealthComponent>(TEXT("HealthComponent"));
+	// HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
+	// HealthComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
 
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
@@ -120,7 +120,7 @@ void APFCharacter::OnAbiltySystemInitialized()
 	UPFAbilitySystemComponent* PFASC = GetPFAbilitySystemComponent();
 	check(PFASC);
 
-	HealthComponent->InitializeWithAbilitySystem(PFASC);
+//	HealthComponent->InitializeWithAbilitySystem(PFASC);
 
 	InitializeGameplayTags();
 }

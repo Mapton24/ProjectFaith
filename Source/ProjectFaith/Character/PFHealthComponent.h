@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// TODO THIS CLASS WILL BE USABLE AFTER I LEARN MORE ABOUT ASC CALCULATIONS
 
 #pragma once
 

@@ -72,9 +72,7 @@ public:
 protected:
 
 	virtual void OnAbiltySystemInitialized();
-	
 	void InitializeGameplayTags();
-
 	//virtual void FellOutOfWorld(const UDamageType& dmgType) override;
 	UFUNCTION()
 	virtual void OnDeathStarted(AActor* OwningActor);
@@ -99,16 +97,10 @@ protected:
 
 private:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF|Character", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UPFHealthComponent> HealthComponent;
-
-	// UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)
-	// FGenericTeamId MyTeamID;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF|Character", Meta = (AllowPrivateAccess = "true"))
+	// TObjectPtr<UPFHealthComponent> HealthComponent;
 
 private:
-
-	// UFUNCTION()
-	// void OnRep_MyTeamID(FGenericTeamId OldTeamID);
 
 };
 
