@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "PFHUD.generated.h"
 
+struct FWidgetControllerParams;
+class UOverlayWidgetController;
 class UAttributeSet;
 class UAbilitySystemComponent;
 class UPFUserWidget;
@@ -25,8 +27,16 @@ public:
 	UPROPERTY()
 	TObjectPtr<UPFUserWidget> OverlayWidget;
 
+	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+
 private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UPFUserWidget> OverlayWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
 	
 };
