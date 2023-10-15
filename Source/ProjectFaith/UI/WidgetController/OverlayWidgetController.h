@@ -22,7 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxParryChangedSignature, float, 
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class PROJECTFAITH_API UOverlayWidgetController : public UPFWidgetController
 {
 	GENERATED_BODY()

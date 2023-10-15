@@ -10,12 +10,12 @@ void UOverlayWidgetController::BroadcastInitialValues()
 
 	OnHealthChanged.Broadcast(PFAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(PFAttributeSet->GetMaxHealth());
-	OnHealthChanged.Broadcast(PFAttributeSet->GetMana());
-	OnMaxHealthChanged.Broadcast(PFAttributeSet->GetMaxMana());
+	OnManaChanged.Broadcast(PFAttributeSet->GetMana());
+	OnMaxManaChanged.Broadcast(PFAttributeSet->GetMaxMana());
 	OnGiftChanged.Broadcast(PFAttributeSet->GetGift());
-	OnMaxHealthChanged.Broadcast(PFAttributeSet->GetMaxGift());
-	OnHealthChanged.Broadcast(PFAttributeSet->GetParry());
-	OnMaxHealthChanged.Broadcast(PFAttributeSet->GetMaxParry());
+	OnMaxGiftChanged.Broadcast(PFAttributeSet->GetMaxGift());
+	OnParryChanged.Broadcast(PFAttributeSet->GetParry());
+	OnMaxParryChanged.Broadcast(PFAttributeSet->GetMaxParry());
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
@@ -25,19 +25,19 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::HealthChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
+		PFAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
+		PFAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+		PFAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::GiftChanged);
+		PFAttributeSet->GetGiftAttribute()).AddUObject(this, &UOverlayWidgetController::GiftChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxGiftChanged);
+		PFAttributeSet->GetMaxGiftAttribute()).AddUObject(this, &UOverlayWidgetController::MaxGiftChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::ParryChanged);
+		PFAttributeSet->GetParryAttribute()).AddUObject(this, &UOverlayWidgetController::ParryChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxParryChanged);
+		PFAttributeSet->GetMaxParryAttribute()).AddUObject(this, &UOverlayWidgetController::MaxParryChanged);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
