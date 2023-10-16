@@ -6,6 +6,7 @@
 #include "PFCharacter.h"
 #include "PFCharacterMain.generated.h"
 
+class APFPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
 
@@ -19,6 +20,12 @@ class PROJECTFAITH_API APFCharacterMain : public APFCharacter
 
 	APFCharacterMain();
 
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+private:
+	void InitAbilityActorInfo();
+
 
 protected:
 
@@ -27,4 +34,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* MainCamera;
+
+	UPROPERTY()
+	APFPlayerState* PFPlayerState; 
 };

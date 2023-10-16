@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// TODO THIS CLASS WILL BE USABLE AFTER I LEARN MORE ABOUT ASC CALCULATIONS
 
 #pragma once
 
@@ -36,10 +37,10 @@ public:
 	mutable FLyraAttributeEvent OnOutOfHealth;
 
 protected:
-	UFUNCTION()
-	virtual void OnRep_Health(const FGameplayAttributeData& OldValue);
-	UFUNCTION()
-	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
+	// UFUNCTION()
+	// virtual void OnRep_Health(const FGameplayAttributeData& OldValue);
+	// UFUNCTION()
+	// virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
 
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
@@ -48,13 +49,13 @@ protected:
 	virtual void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
 
 private:
-	//The current health attribute.  The health will be capped by the max health attribute.  Health is hidden from modifiers so only executions can modify it.
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "PF|Health", Meta = (HideFromModifiers, AllowPrivateAccess = true))
-	FGameplayAttributeData Health;
-	
-	// The current max health attribute.  Max health is an attribute since gameplay effects can modify it.
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "PF|Health", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxHealth;
+	// //The current health attribute.  The health will be capped by the max health attribute.  Health is hidden from modifiers so only executions can modify it.
+	// UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "PF|Health", Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	// FGameplayAttributeData Health;
+	//
+	// // The current max health attribute.  Max health is an attribute since gameplay effects can modify it.
+	// UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "PF|Health", Meta = (AllowPrivateAccess = true))
+	// FGameplayAttributeData MaxHealth;
 
 	// Tracks if health reaches 0
 	bool bOutOfHealth;
