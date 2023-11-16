@@ -81,7 +81,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				if (Tag.MatchesTag(MessageTag))
 				{
 					const FPFNotificationMessage* Row = GetDataTableRowByTag<FPFNotificationMessage>(MessageWidgetDataTable, Tag);
-					MessageWidgetRowDelegate.Broadcast(*Row);
+					if (Row)
+					{
+						MessageWidgetRowDelegate.Broadcast(*Row);
+					}
+					UE_LOG(LogTemp, Error, TEXT("MessageWidgetDataTable is null. Make sure that the naming is right."))
+					return;
 				}
 			}
 		});
