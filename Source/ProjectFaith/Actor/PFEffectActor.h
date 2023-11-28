@@ -8,6 +8,7 @@
 #include "PFEffectActor.generated.h"
 
 class USphereComponent;
+class UGameplayEffect;
 
 UENUM(BlueprintType)
 enum class EEffectApplicationPolicy
@@ -33,6 +34,7 @@ public:
 	APFEffectActor();
 
 protected:
+	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);

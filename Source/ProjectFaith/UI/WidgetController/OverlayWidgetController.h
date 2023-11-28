@@ -5,19 +5,32 @@
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
 #include "PFWidgetController.h"
+#include "ProjectFaith/Messages/PFNotificationMessage.h"
 #include "OverlayWidgetController.generated.h"
 
+USTRUCT(BlueprintType)
+struct FUIWidgetRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTag MessageTag = FGameplayTag();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Message = FText();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<class UPFUserWidget> MessageWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture2D* Image = nullptr;
+};
 
 
 struct FOnAttributeChangeData;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGiftChangedSignature, float, NewGift);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxGiftChangedSignature, float, NewMaxGift);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnParryChangedSignature, float, NewParry);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxParryChangedSignature, float, NewMaxParry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FPFNotificationMessage, Row);
 
 /**
  * 
@@ -32,36 +45,43 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnHealthChangedSignature OnHealthChanged;
+	FOnAttributeChangedSignature OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnMaxHealthChangedSignature OnMaxHealthChanged;
+	FOnAttributeChangedSignature OnMaxHealthChanged;
 	
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnManaChangedSignature OnManaChanged;
+	FOnAttributeChangedSignature OnManaChanged;
 	
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnMaxManaChangedSignature OnMaxManaChanged;
+	FOnAttributeChangedSignature OnMaxManaChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnGiftChangedSignature OnGiftChanged;
+	FOnAttributeChangedSignature OnGiftChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnMaxGiftChangedSignature OnMaxGiftChanged;
+	FOnAttributeChangedSignature OnMaxGiftChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnParryChangedSignature OnParryChanged;
+	FOnAttributeChangedSignature OnParryChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
-	FOnMaxParryChangedSignature OnMaxParryChanged;
+	FOnAttributeChangedSignature OnMaxParryChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
+	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
 protected:
-	void HealthChanged(const FOnAttributeChangeData& Data) const;
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	void ManaChanged(const FOnAttributeChangeData& Data) const;
-	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
-	void GiftChanged(const FOnAttributeChangeData& Data) const;
-	void MaxGiftChanged(const FOnAttributeChangeData& Data) const;
-	void ParryChanged(const FOnAttributeChangeData& Data) const;
-	void MaxParryChanged(const FOnAttributeChangeData& Data) const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UDataTable> MessageWidgetDataTable;
+
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 };
+
+template <typename T>
+T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT (""));
+}

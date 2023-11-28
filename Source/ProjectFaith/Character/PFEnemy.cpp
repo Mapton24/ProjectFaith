@@ -22,3 +22,9 @@ void APFEnemy::BeginPlay()
 	Super::BeginPlay();
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
+
+void APFEnemy::InitAbilityActorInfo()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UPFAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+}

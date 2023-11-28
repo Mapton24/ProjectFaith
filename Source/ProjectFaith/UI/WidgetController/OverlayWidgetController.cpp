@@ -2,7 +2,10 @@
 
 
 #include "OverlayWidgetController.h"
+
+#include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 #include "ProjectFaith/Attributes/PFAttributeSet.h"
+#include "ProjectFaith/Messages/PFNotificationMessage.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -22,60 +25,69 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 {
 	const UPFAttributeSet* PFAttributeSet = CastChecked<UPFAttributeSet>(AttributeSet);
 
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(PFAttributeSet->GetHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnHealthChanged.Broadcast(Data.NewValue);
+		});
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(PFAttributeSet->GetMaxHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxHealthChanged.Broadcast(Data.NewValue);
+		});
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::HealthChanged);
+		PFAttributeSet->GetManaAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnManaChanged.Broadcast(Data.NewValue);
+			});
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
+		PFAttributeSet->GetMaxManaAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxManaChanged.Broadcast(Data.NewValue);
+			});
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
+		PFAttributeSet->GetGiftAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnGiftChanged.Broadcast(Data.NewValue);
+			});
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+		PFAttributeSet->GetMaxGiftAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxGiftChanged.Broadcast(Data.NewValue);
+			});
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetGiftAttribute()).AddUObject(this, &UOverlayWidgetController::GiftChanged);
+		PFAttributeSet->GetParryAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnParryChanged.Broadcast(Data.NewValue);
+			});
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetMaxGiftAttribute()).AddUObject(this, &UOverlayWidgetController::MaxGiftChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetParryAttribute()).AddUObject(this, &UOverlayWidgetController::ParryChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
-		PFAttributeSet->GetMaxParryAttribute()).AddUObject(this, &UOverlayWidgetController::MaxParryChanged);
-}
+		PFAttributeSet->GetMaxParryAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxParryChanged.Broadcast(Data.NewValue);
+			});
 
-void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnManaChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxManaChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::GiftChanged(const FOnAttributeChangeData& Data) const
-{
-	OnGiftChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxGiftChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxGiftChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::ParryChanged(const FOnAttributeChangeData& Data) const
-{
-	OnParryChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxParryChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxParryChanged.Broadcast(Data.NewValue);
+	Cast <UPFAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[this](const FGameplayTagContainer& AssetTags)
+		{
+			for (const FGameplayTag& Tag : AssetTags)
+			{
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+				if (Tag.MatchesTag(MessageTag))
+				{
+					const FPFNotificationMessage* Row = GetDataTableRowByTag<FPFNotificationMessage>(MessageWidgetDataTable, Tag);
+					if (Row)
+					{
+						MessageWidgetRowDelegate.Broadcast(*Row);
+					}
+					UE_LOG(LogTemp, Error, TEXT("MessageWidgetDataTable is null. Make sure that the naming is right."))
+					return;
+				}
+			}
+		});
 }

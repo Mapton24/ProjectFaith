@@ -24,7 +24,7 @@ class PROJECTFAITH_API APFCharacterMain : public APFCharacter
 	virtual void OnRep_PlayerState() override;
 
 private:
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 
 
 protected:

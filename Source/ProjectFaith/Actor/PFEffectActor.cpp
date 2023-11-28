@@ -9,6 +9,13 @@
 APFEffectActor::APFEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
+}
+
+void APFEffectActor::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 void APFEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
@@ -65,6 +72,7 @@ void APFEffectActor::EndOverlap(AActor* TargetActor)
 		if (!IsValid(TargetASC)) return;
 
 		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
+		// TTuple is key value pair
 		for (TTuple<FActiveGameplayEffectHandle, UAbilitySystemComponent*> HandlePair : ActiveEffectHandles)
 		{
 			if (TargetASC == HandlePair.Value)
@@ -72,12 +80,11 @@ void APFEffectActor::EndOverlap(AActor* TargetActor)
 				TargetASC->RemoveActiveGameplayEffect(HandlePair.Key, 1);
 				HandlesToRemove.Add(HandlePair.Key);
 			}
-			for (FActiveGameplayEffectHandle& Handle : HandlesToRemove)
-			{
-				ActiveEffectHandles.FindAndRemoveChecked(Handle);
-			}
 		}
-		
+		for (FActiveGameplayEffectHandle& Handle : HandlesToRemove)
+		{
+			ActiveEffectHandles.FindAndRemoveChecked(Handle);
+		}
 	}
 }
 

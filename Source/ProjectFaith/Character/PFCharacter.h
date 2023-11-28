@@ -82,7 +82,7 @@ protected:
 	void DisableMovementAndCollision();
 	void DestroyDueToDeath();
 	void UninitAndDestroy();
-
+	virtual void InitAbilityActorInfo();
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
 	void K2_OnDeathFinished();
 

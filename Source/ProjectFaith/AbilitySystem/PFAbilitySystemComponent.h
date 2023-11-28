@@ -4,10 +4,11 @@
 
 #include "AbilitySystemComponent.h"
 #include "Abilities/PFGameplayAbility.h"
-
 #include "PFAbilitySystemComponent.generated.h"
 
 class AActor;
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
+
 /**
  * 
  */
@@ -17,10 +18,13 @@ class PROJECTFAITH_API UPFAbilitySystemComponent : public UAbilitySystemComponen
 	GENERATED_BODY()
 
 public:
-
+	void AbilityActorInfoSet();
+	FEffectAssetTags EffectAssetTags;
 	UPFAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 protected:
+
+	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 
 	// Handles abilities that had input PRESSED this frame.
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;

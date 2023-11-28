@@ -201,4 +201,9 @@ void APFCharacter::UninitAndDestroy()
 	SetActorHiddenInGame(true);
 }
 
+void APFCharacter::InitAbilityActorInfo()
+{
+	
+}
+
 

@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 #include "ProjectFaith/Player/PFPlayerController.h"
 #include "ProjectFaith/Player/PFPlayerState.h"
 #include "ProjectFaith/UI/HUD/PFHUD.h"
@@ -39,6 +40,7 @@ void APFCharacterMain::InitAbilityActorInfo()
 	PFPlayerState = GetPlayerState<APFPlayerState>();
 	check(PFPlayerState);
 	PFPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(PFPlayerState, this);
+	Cast<UPFAbilitySystemComponent>(PFPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = PFPlayerState->GetAbilitySystemComponent();
 	AttributeSet = PFPlayerState->GetAttributeSet();
 
