@@ -16,12 +16,30 @@ UPFAttributeSet::UPFAttributeSet()
 	InitMaxGift(100.f);
 	InitParry(80.f);
 	InitMaxParry(100.f);
+	InitMeleeAttackDamage(50.f);
 }
 
 void UPFAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	//Combat Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeAttackDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedAttackDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeCritChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeCritDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeAttackSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedAttackSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeSkillDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedSkillDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, SynergyDamage, COND_None, REPNOTIFY_Always);
+	//Rank Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeRank, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedRank, COND_None, REPNOTIFY_Always);
+	//Vital Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, Mana, COND_None, REPNOTIFY_Always);
@@ -30,7 +48,6 @@ void UPFAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MaxGift, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, Parry, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MaxParry, COND_None, REPNOTIFY_Always);
-
 }
 
 UWorld* UPFAttributeSet::GetWorld() const
@@ -38,6 +55,81 @@ UWorld* UPFAttributeSet::GetWorld() const
 	const UObject* Outer = GetOuter();
 	check(Outer);
 	return Outer->GetWorld();
+}
+
+/*
+ * Vital Attributes
+ */
+
+void UPFAttributeSet::OnRep_MeleeAttackDamage(const FGameplayAttributeData& OldMeleeAttackDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeAttackDamage, OldMeleeAttackDamage);
+}
+
+void UPFAttributeSet::OnRep_RangedAttackDamage(const FGameplayAttributeData& OldRangedAttackDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedAttackDamage, OldRangedAttackDamage);
+}
+
+void UPFAttributeSet::OnRep_MeleeCritChance(const FGameplayAttributeData& OldMeleeCritChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeCritChance, OldMeleeCritChance);
+}
+
+void UPFAttributeSet::OnRep_RangedCritChance(const FGameplayAttributeData& OldRangedCritChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedCritChance, OldRangedCritChance);
+
+}
+
+void UPFAttributeSet::OnRep_MeleeCritDamage(const FGameplayAttributeData& OldMeleeCritDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeCritDamage, OldMeleeCritDamage);
+}
+
+void UPFAttributeSet::OnRep_RangedCritDamage(const FGameplayAttributeData& OldRangedCritDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedCritDamage, OldRangedCritDamage);
+}
+
+void UPFAttributeSet::OnRep_MeleeAttackSpeed(const FGameplayAttributeData& OldMeleeAttackSpeed) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeAttackSpeed, OldMeleeAttackSpeed);
+}
+
+void UPFAttributeSet::OnRep_RangedAttackSpeed(const FGameplayAttributeData& OldRangedAttackSpeed) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedAttackSpeed, OldRangedAttackSpeed);
+}
+
+void UPFAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldMovementSpeed) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MovementSpeed, OldMovementSpeed);
+}
+
+void UPFAttributeSet::OnRep_MeleeSkillDamage(const FGameplayAttributeData& OldMeleeSkillDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeSkillDamage, OldMeleeSkillDamage);
+}
+
+void UPFAttributeSet::OnRep_RangedSkillDamage(const FGameplayAttributeData& OldRangedSkillDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedSkillDamage, OldRangedSkillDamage);
+}
+
+void UPFAttributeSet::OnRep_SynergyDamage(const FGameplayAttributeData& OldSynergyDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, SynergyDamage, OldSynergyDamage);
+}
+
+void UPFAttributeSet::OnRep_MeleeRank(const FGameplayAttributeData& OldMeleeRank) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeRank, OldMeleeRank);
+}
+
+void UPFAttributeSet::OnRep_RangedRank(const FGameplayAttributeData& OldRangedRank) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedRank, OldRangedRank);
 }
 
 void UPFAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
