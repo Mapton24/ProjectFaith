@@ -2,21 +2,40 @@
 
 
 #include "PFAttributeSet.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayEffectExtension.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
 #include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 
 UPFAttributeSet::UPFAttributeSet()
 {
-	InitHealth(5.f);
-	InitMaxHealth(100.f);
-	InitMana(60.f);
-	InitMaxMana(100.f);
-	InitGift(70.f);
-	InitMaxGift(100.f);
-	InitParry(80.f);
-	InitMaxParry(100.f);
-	InitMeleeAttackDamage(50.f);
+	InitMeleeLevel(1.f);
+	InitRangedLevel(1.f);
+}
+
+void UPFAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	}
+	if (Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+	}
+	if (Attribute == GetGiftAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxGift());
+	}
+	if (Attribute == GetMaxParryAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxParry());
+	}
 }
 
 void UPFAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -50,6 +69,56 @@ void UPFAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MaxParry, COND_None, REPNOTIFY_Always);
 }
 
+
+void UPFAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props)
+{
+
+	Props.EffectContextHandle = Data.EffectSpec.GetContext();
+	
+	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+	
+	if (IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get();
+		Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get();
+		if (Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
+		{
+			if (const APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor))
+			{
+				Props.SourceController = Pawn->GetController();
+			}
+		}
+		if (Props.SourceController)
+		{
+			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
+		}
+	}
+
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+	
+}
+
+void UPFAttributeSet::UpdateAttribute(const FGameplayAttribute& Attribute)
+{
+	if (Attribute == GetHealthAttribute()) SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	if (Attribute == GetManaAttribute()) SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	if (Attribute == GetGiftAttribute()) SetGift(FMath::Clamp(GetGift(), 0.f, GetMaxGift()));
+	if (Attribute == GetParryAttribute()) SetParry(FMath::Clamp(GetParry(), 0.f, GetMaxParry()));
+}
+void UPFAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	FEffectProperties Props;
+	SetEffectProperties(Data, Props);
+	UpdateAttribute(Data.EvaluatedData.Attribute);
+}
+
 UWorld* UPFAttributeSet::GetWorld() const
 {
 	const UObject* Outer = GetOuter();
@@ -57,10 +126,22 @@ UWorld* UPFAttributeSet::GetWorld() const
 	return Outer->GetWorld();
 }
 
-/*
- * Vital Attributes
- */
 
+/*
+ * Level Attributes
+ */
+void UPFAttributeSet::OnRep_MeleeLevel(const FGameplayAttributeData& OldMeleeLevel) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeLevel, OldMeleeLevel);
+}
+
+void UPFAttributeSet::OnRep_RangedLevel(const FGameplayAttributeData& OldRangedLevel) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedLevel, OldRangedLevel);
+}
+/*
+ * Combat Attributes
+ */
 void UPFAttributeSet::OnRep_MeleeAttackDamage(const FGameplayAttributeData& OldMeleeAttackDamage) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeAttackDamage, OldMeleeAttackDamage);
@@ -121,7 +202,9 @@ void UPFAttributeSet::OnRep_SynergyDamage(const FGameplayAttributeData& OldSyner
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, SynergyDamage, OldSynergyDamage);
 }
-
+/*
+ * Rank Attributes
+ */
 void UPFAttributeSet::OnRep_MeleeRank(const FGameplayAttributeData& OldMeleeRank) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeRank, OldMeleeRank);
@@ -131,7 +214,18 @@ void UPFAttributeSet::OnRep_RangedRank(const FGameplayAttributeData& OldRangedRa
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedRank, OldRangedRank);
 }
+void UPFAttributeSet::OnRep_MeleeRankPotential(const FGameplayAttributeData& OldMeleeRankPotential) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, MeleeRankPotential, OldMeleeRankPotential);
+}
 
+void UPFAttributeSet::OnRep_RangedRankPotential(const FGameplayAttributeData& OldRangedRankPotential) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedRankPotential, OldRangedRankPotential);
+}
+/*
+ * Vital Attributes
+ */
 void UPFAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, Health, OldHealth);

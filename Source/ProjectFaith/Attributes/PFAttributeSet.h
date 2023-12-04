@@ -5,12 +5,48 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffectExtension.h"
 #include "PFAttributeSet.generated.h"
 
 class AActor;
 class UObject;
 class UWorld;
 struct FGameplayEffectSpec;
+
+USTRUCT()
+struct FEffectProperties
+{
+	GENERATED_BODY()
+
+	FEffectProperties(){}
+	
+	FGameplayEffectContextHandle EffectContextHandle;
+	
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASC = nullptr;
+
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* SourceController = nullptr;
+
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* TargetController = nullptr;
+
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
+};
+
 /**
  * This macro defines a set of helper functions for accessing and initializing attributes.
  *
@@ -41,9 +77,24 @@ class PROJECTFAITH_API UPFAttributeSet : public UAttributeSet
 
 public:
 	UPFAttributeSet();
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	void UpdateAttribute(const FGameplayAttribute& Attribute);
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	UWorld* GetWorld() const override;
 
+
+	/*
+	 * Level Attribute
+	 */
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeAttackDamage, Category = "Level Attributes")
+	FGameplayAttributeData MeleeLevel;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeLevel);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedAttackDamage, Category = "Level Attributes")
+	FGameplayAttributeData RangedLevel;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedLevel);
+	
 	/*
 	 * Combat Attributes
 	 */
@@ -108,43 +159,60 @@ public:
 	FGameplayAttributeData RangedRank;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedRank);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeRankPotential, Category = "Rank Attributes")
+	FGameplayAttributeData MeleeRankPotential;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeRankPotential);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedRankPotential, Category = "Rank Attributes")
+	FGameplayAttributeData RangedRankPotential;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedRankPotential);
+
 	/*
 	 * Vital Attributes
 	 */
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Health")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Health);
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Health")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxHealth);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Mana")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Vital Attributes")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Mana);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Mana")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Vital Attributes")
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxMana);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Gift, Category = "Gift")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Gift, Category = "Vital Attributes")
 	FGameplayAttributeData Gift;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Gift);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxGift, Category = "Gift")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxGift, Category = "Vital Attributes")
 	FGameplayAttributeData MaxGift;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxGift);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Parry, Category = "Parry")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Parry, Category = "Vital Attributes")
 	FGameplayAttributeData Parry;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Parry);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxParry, Category = "Parry")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxParry, Category = "Vital Attributes")
 	FGameplayAttributeData MaxParry;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxParry);
 
+private:
+	void SetEffectProperties( const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);
+
+	
 protected:
+	//Level OnRep
+	UFUNCTION()
+	void OnRep_MeleeLevel(const FGameplayAttributeData& OldMeleeLevel) const;
+	UFUNCTION()
+	void OnRep_RangedLevel(const FGameplayAttributeData& OldRangedLevel) const;
 	//Combat OnRep
 	UFUNCTION()
 	void OnRep_MeleeAttackDamage(const FGameplayAttributeData& OldMeleeAttackDamage) const;
@@ -175,6 +243,10 @@ protected:
 	void OnRep_MeleeRank(const FGameplayAttributeData& OldMeleeRank) const;
 	UFUNCTION()
 	void OnRep_RangedRank(const FGameplayAttributeData& OldRangedRank) const;
+	UFUNCTION()
+	void OnRep_MeleeRankPotential(const FGameplayAttributeData& OldMeleeRankPotential) const;
+	UFUNCTION()
+	void OnRep_RangedRankPotential(const FGameplayAttributeData& OldRangedRankPotential) const;
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 	UFUNCTION()
