@@ -36,5 +36,7 @@ protected:
 	UCameraComponent* MainCamera;
 
 	UPROPERTY()
-	APFPlayerState* PFPlayerState; 
+	APFPlayerState* PFPlayerState;
+
+	
 };

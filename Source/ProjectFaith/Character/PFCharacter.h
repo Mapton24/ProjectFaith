@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffect.h"
 #include "GameplayTagAssetInterface.h"
 #include "GameFramework/Character.h"
 
@@ -83,24 +84,37 @@ protected:
 	void DestroyDueToDeath();
 	void UninitAndDestroy();
 	virtual void InitAbilityActorInfo();
-	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
-	void K2_OnDeathFinished();
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
+	void InitializeDefaultAttributes() const;
 
 
 protected:
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultLevelAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultMeleeCombatAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultRangedCombatAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultCombatAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultRankAttributes;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> RightHandWeapon;
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
+	void K2_OnDeathFinished();
 private:
-
-	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PF|Character", Meta = (AllowPrivateAccess = "true"))
-	// TObjectPtr<UPFHealthComponent> HealthComponent;
-
-private:
+	
 
 };
 
