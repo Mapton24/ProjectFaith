@@ -88,64 +88,59 @@ public:
 	 * Level Attribute
 	 */
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeAttackDamage, Category = "Level Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeLevel, Category = "Level Attributes")
 	FGameplayAttributeData MeleeLevel;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeLevel);
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedAttackDamage, Category = "Level Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedLevel, Category = "Level Attributes")
 	FGameplayAttributeData RangedLevel;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedLevel);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SynergyLevel, Category = "Level Attributes")
+	FGameplayAttributeData SynergyLevel;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, SynergyLevel);
 	
 	/*
 	 * Combat Attributes
 	 */
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeAttackDamage, Category = "Combat Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeAttackDamage, Category = "Melee Combat Attributes")
 	FGameplayAttributeData MeleeAttackDamage;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeAttackDamage);
-	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedAttackDamage, Category = "Combat Attributes")
-	FGameplayAttributeData RangedAttackDamage;
-	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedAttackDamage);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeCritChance, Category = "Combat Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeCritChance, Category = "Melee Combat Attributes")
 	FGameplayAttributeData MeleeCritChance;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeCritChance);
-	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedCritChance, Category = "Combat Attributes")
-	FGameplayAttributeData RangedCritChance;
-	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedCritChance);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeCritDamage, Category = "Combat Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeCritDamage, Category = "Melee Combat Attributes")
 	FGameplayAttributeData MeleeCritDamage;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeCritDamage);
-	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedCritDamage, Category = "Combat Attributes")
-	FGameplayAttributeData RangedCritDamage;
-	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedCritDamage);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeAttackSpeed, Category = "Combat Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeAttackSpeed, Category = "Melee Combat Attributes")
 	FGameplayAttributeData MeleeAttackSpeed;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeAttackSpeed);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedAttackSpeed, Category = "Combat Attributes")
-	FGameplayAttributeData RangedAttackSpeed;
-	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedAttackSpeed);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MovementSpeed, Category = "Combat Attributes")
-	FGameplayAttributeData MovementSpeed;
-	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MovementSpeed);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeSkillDamage, Category = "Combat Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MeleeSkillDamage, Category = "Melee Combat Attributes")
 	FGameplayAttributeData MeleeSkillDamage;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MeleeSkillDamage);
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedSkillDamage, Category = "Combat Attributes")
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedAttackDamage, Category = "Ranged Combat Attributes")
+	FGameplayAttributeData RangedAttackDamage;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedAttackDamage);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedCritChance, Category = "Ranged Combat Attributes")
+	FGameplayAttributeData RangedCritChance;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedCritChance);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedCritDamage, Category = "Ranged Combat Attributes")
+	FGameplayAttributeData RangedCritDamage;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedCritDamage);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedAttackSpeed, Category = "Ranged Combat Attributes")
+	FGameplayAttributeData RangedAttackSpeed;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedAttackSpeed);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_RangedSkillDamage, Category = "Ranged Combat Attributes")
 	FGameplayAttributeData RangedSkillDamage;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, RangedSkillDamage);
-
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SynergyDamage, Category = "Combat Attributes")
 	FGameplayAttributeData SynergyDamage;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, SynergyDamage);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MovementSpeed, Category = "Combat Attributes")
+	FGameplayAttributeData MovementSpeed;
+	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MovementSpeed);
 	
 	/*
 	 * Rank Attributes
@@ -213,6 +208,8 @@ protected:
 	void OnRep_MeleeLevel(const FGameplayAttributeData& OldMeleeLevel) const;
 	UFUNCTION()
 	void OnRep_RangedLevel(const FGameplayAttributeData& OldRangedLevel) const;
+	UFUNCTION()
+	void OnRep_SynergyLevel(const FGameplayAttributeData& OldSynergyLevel) const;
 	//Combat OnRep
 	UFUNCTION()
 	void OnRep_MeleeAttackDamage(const FGameplayAttributeData& OldMeleeAttackDamage) const;

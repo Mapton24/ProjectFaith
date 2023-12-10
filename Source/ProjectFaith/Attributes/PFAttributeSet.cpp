@@ -12,8 +12,7 @@
 
 UPFAttributeSet::UPFAttributeSet()
 {
-	InitMeleeLevel(1.f);
-	InitRangedLevel(1.f);
+	
 }
 
 void UPFAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -42,22 +41,30 @@ void UPFAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	//Combat Attributes
+	//Level Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeLevel, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedLevel, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, SynergyLevel, COND_None, REPNOTIFY_Always);
+	//Melee Combat Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeAttackDamage, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedAttackDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeCritChance, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeCritDamage, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeAttackSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeSkillDamage, COND_None, REPNOTIFY_Always);
+	//Ranged Combat Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedAttackDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedAttackSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeSkillDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedSkillDamage, COND_None, REPNOTIFY_Always);
+	//Synergy Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, SynergyDamage, COND_None, REPNOTIFY_Always);
 	//Rank Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeRank, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedRank, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeRankPotential, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedRankPotential, COND_None, REPNOTIFY_Always);
 	//Vital Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
@@ -138,6 +145,10 @@ void UPFAttributeSet::OnRep_MeleeLevel(const FGameplayAttributeData& OldMeleeLev
 void UPFAttributeSet::OnRep_RangedLevel(const FGameplayAttributeData& OldRangedLevel) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, RangedLevel, OldRangedLevel);
+}
+void UPFAttributeSet::OnRep_SynergyLevel(const FGameplayAttributeData& OldSynergyLevel) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UPFAttributeSet, SynergyLevel, OldSynergyLevel);
 }
 /*
  * Combat Attributes
