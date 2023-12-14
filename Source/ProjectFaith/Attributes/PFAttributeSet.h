@@ -170,7 +170,7 @@ public:
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Health);
 	
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Max Vital Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxHealth);
 
@@ -178,7 +178,7 @@ public:
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Mana);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Vital Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Max Vital Attributes")
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxMana);
 
@@ -186,7 +186,7 @@ public:
 	FGameplayAttributeData Gift;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Gift);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxGift, Category = "Vital Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxGift, Category = "Max Vital Attributes")
 	FGameplayAttributeData MaxGift;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxGift);
 
@@ -194,7 +194,7 @@ public:
 	FGameplayAttributeData Parry;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, Parry);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxParry, Category = "Vital Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxParry, Category = "Max Vital Attributes")
 	FGameplayAttributeData MaxParry;
 	ATTRIBUTE_ACCESSORS(UPFAttributeSet, MaxParry);
 

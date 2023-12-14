@@ -31,7 +31,7 @@ void UPFAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxGift());
 	}
-	if (Attribute == GetMaxParryAttribute())
+	if (Attribute == GetParryAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxParry());
 	}

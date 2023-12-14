@@ -218,6 +218,7 @@ void APFCharacter::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultRangedCombatAttributes, 1.f);
 	ApplyEffectToSelf(DefaultCombatAttributes, 1.f);
 	ApplyEffectToSelf(DefaultRankAttributes, 1.f);
+	ApplyEffectToSelf(DefaultMaxVitalAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 
 }
