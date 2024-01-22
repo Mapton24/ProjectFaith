@@ -201,6 +201,29 @@ void APFCharacter::UninitAndDestroy()
 	SetActorHiddenInGame(true);
 }
 
+void APFCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(GameplayEffectClass);
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+void APFCharacter::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultLevelAttributes, 1.f);
+	ApplyEffectToSelf(DefaultMeleeCombatAttributes, 1.f);
+	ApplyEffectToSelf(DefaultRangedCombatAttributes, 1.f);
+	ApplyEffectToSelf(DefaultCombatAttributes, 1.f);
+	ApplyEffectToSelf(DefaultRankAttributes, 1.f);
+	ApplyEffectToSelf(DefaultMaxVitalAttributes, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+
+}
+
+
 void APFCharacter::InitAbilityActorInfo()
 {
 	

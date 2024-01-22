@@ -85,8 +85,6 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 					{
 						MessageWidgetRowDelegate.Broadcast(*Row);
 					}
-					UE_LOG(LogTemp, Error, TEXT("MessageWidgetDataTable is null. Make sure that the naming is right."))
-					return;
 				}
 			}
 		});

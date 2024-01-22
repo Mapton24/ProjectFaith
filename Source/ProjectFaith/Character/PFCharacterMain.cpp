@@ -51,5 +51,6 @@ void APFCharacterMain::InitAbilityActorInfo()
 			PFHUD->InitOverlay(PFPlayerController, PFPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+	InitializeDefaultAttributes();
 	
 }
