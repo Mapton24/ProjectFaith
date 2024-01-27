@@ -3,6 +3,120 @@
 
 #include "PFGameplayTags.h"
 
+#include "AssetTypeCategories.h"
+
+FPFGameplayTags FPFGameplayTags::GameplayTags;
+
+void FPFGameplayTags::InitializeNativeGameplayTags()
+{
+	/*
+	 * Level Attributes
+	 */
+	
+	GameplayTags.Attributes_Levels_MeleeLevel = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Levels.MeleeLevel"),
+		FString("PC level.")
+		);
+
+	GameplayTags.Attributes_Levels_RangedLevel = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Levels.RangedLevel"),
+		FString("Mima level.")
+		);
+
+	GameplayTags.Attributes_Levels_SynergyLevel = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Levels.SynergyLevel"),
+		FString("PC and Mima synergy level.")
+		);
+
+	/*
+	 * Melee Combat Attributes
+	 */
+
+	GameplayTags.Attributes_MeleeCombat_MeleeAttackDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.MeleeCombat.MeleeAttackDamage"),
+		FString("Increases PC physical damage.")
+		);
+	
+	GameplayTags.Attributes_MeleeCombat_MeleeCritChance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.MeleeCombat.MeleeCritChance"),
+		FString("Increases PC chance to hit hard.")
+		);
+
+	GameplayTags.Attributes_MeleeCombat_MeleeCritDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.MeleeCombat.MeleeCritDamage"),
+		FString("Increases PC weak point damage.")
+		);
+
+	GameplayTags.Attributes_MeleeCombat_MeleeAttackSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.MeleeCombat.MeleeAttackSpeed"),
+		FString("Increases PC attack speed.")
+		);
+
+	GameplayTags.Attributes_MeleeCombat_MeleeSkillDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.MeleeCombat.MeleeSkillDamage"),
+		FString("Increases PC special skill damage.")
+		);
+	/*
+	 * Ranged Combat Attributes
+	 */
+
+	GameplayTags.Attributes_RangedCombat_RangedAttackDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.RangedCombat.RangedAttackDamage"),
+		FString("Increases Mima magical damage.")
+		);
+	
+	GameplayTags.Attributes_RangedCombat_RangedCritChance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.RangedCombat.RangedCritChance"),
+		FString("Increases Mima chance to hit hard.")
+		);
+
+	GameplayTags.Attributes_RangedCombat_RangedCritDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.RangedCombat.RangedCritDamage"),
+		FString("Increases Mima weak point damage.")
+		);
+
+	GameplayTags.Attributes_RangedCombat_RangedAttackSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.RangedCombat.RangedAttackSpeed"),
+		FString("Increases Mima casting speed.")
+		);
+
+	GameplayTags.Attributes_RangedCombat_RangedSkillDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.RangedCombat.RangedSkillDamage"),
+		FString("Increases Mima special skill damage.")
+		);
+
+	/*
+	 * Synergy
+	 */
+
+	GameplayTags.Attributes_Synergy_SynergyDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Synergy.SynergyDamage"),
+		FString("Increases heroes combined Synergy Damage.")
+		);
+
+	/*
+	 * Miscellaneous
+	 */
+
+	GameplayTags.Attributes_Combat_MovementSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Combat.MovementSpeed"),
+		FString("Increases heroes movement speed.")
+		);
+
+	/*
+	 * Rank
+	 */
+
+	GameplayTags.Attributes_Rank_MeleeRankPotential = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Rank.MeleeRankPotential"),
+	FString("Increases PC ability to increase his rank.")
+	);
+	GameplayTags.Attributes_Rank_RangedRankPotential = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Combat.RangedRankPotential"),
+	FString("Increases Mima ability to increase her rank.")
+	);
+}
+
 namespace PFGameplayTags
 {
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_ActivateFail_IsDead, "Ability.ActivateFail.IsDead", "Ability failed to activate because its owner is dead.");
