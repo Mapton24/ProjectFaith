@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 
 /*
- * Singleton containing native Gmaeplay Tags
+ * Singleton containing native Gameplay Tags
  */
 
 struct FPFGameplayTags
