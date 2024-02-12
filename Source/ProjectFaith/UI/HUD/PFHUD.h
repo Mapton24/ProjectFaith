@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "ProjectFaith/UI/WidgetController/PFWidgetController.h"
 #include "PFHUD.generated.h"
 
 struct FWidgetControllerParams;
 class UOverlayWidgetController;
+class UAttributeMenuWidgetController;
 class UAttributeSet;
 class UAbilitySystemComponent;
 class UPFUserWidget;
@@ -21,15 +23,15 @@ class PROJECTFAITH_API APFHUD : public AHUD
 
 public:
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
-
 	
-public:
-	UPROPERTY()
-	TObjectPtr<UPFUserWidget> OverlayWidget;
-
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams);
 
 private:
+
+	UPROPERTY()
+	TObjectPtr<UPFUserWidget> OverlayWidget;
+	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UPFUserWidget> OverlayWidgetClass;
 
@@ -38,5 +40,11 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
+
+	UPROPERTY()
+	TObjectPtr<UAttributeMenuWidgetController> AttributeMenuWidgetController;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAttributeMenuWidgetController> AttributeMenuWidgetControllerClass;
 	
 };
