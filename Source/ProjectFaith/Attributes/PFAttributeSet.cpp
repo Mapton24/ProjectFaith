@@ -7,12 +7,35 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "ProjectFaith/PFGameplayTags.h"
 
 #include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 
 UPFAttributeSet::UPFAttributeSet()
 {
+	const FPFGameplayTags& GameplayTags = FPFGameplayTags::Get();
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Levels_MeleeLevel, GetMeleeLevelAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Levels_RangedLevel, GetRangedLevelAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Levels_SynergyLevel, GetSynergyLevelAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeAttackDamage, GetMeleeAttackDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeCritChance, GetMeleeCritChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeCritDamage, GetMeleeCritDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeAttackSpeed, GetMeleeAttackSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeSkillDamage, GetMeleeSkillDamageAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedAttackDamage, GetRangedAttackDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedCritChance, GetRangedCritChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedCritDamage, GetRangedCritDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedAttackSpeed, GetRangedAttackSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedSkillDamage, GetRangedSkillDamageAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Synergy_SynergyDamage, GetSynergyDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Combat_MovementSpeed, GetMovementSpeedAttribute);
+
 	
+
 }
 
 void UPFAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
