@@ -9,6 +9,10 @@
 /**
  * 
  */
+class UAttributeInfo;
+struct FPFAttributeInfo;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FPFAttributeInfo&, Info);
+
 UCLASS(BlueprintType, Blueprintable)
 class PROJECTFAITH_API UAttributeMenuWidgetController : public UPFWidgetController
 {
@@ -16,9 +20,13 @@ class PROJECTFAITH_API UAttributeMenuWidgetController : public UPFWidgetControll
 
 public:
 
-	virtual void BindCallbacksToDependencies() override;
+	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValues() override;
-
-
-private:
+	virtual void BindCallbacksToDependencies() override;
+	
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FAttributeInfoSignature AttributeInfoDelegate;
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAttributeInfo> AttributeInfo;
 };
