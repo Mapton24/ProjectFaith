@@ -34,6 +34,11 @@ UPFAttributeSet::UPFAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Synergy_SynergyDamage, GetSynergyDamageAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Combat_MovementSpeed, GetMovementSpeedAttribute);
 
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxMana, GetMaxManaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxGift, GetMaxGiftAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxParry, GetMaxParryAttribute);
+
 	
 
 }
