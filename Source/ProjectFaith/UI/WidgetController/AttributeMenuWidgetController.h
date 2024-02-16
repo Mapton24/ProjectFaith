@@ -6,6 +6,8 @@
 #include "PFWidgetController.h"
 #include "AttributeMenuWidgetController.generated.h"
 
+struct FGameplayAttribute;
+struct FGameplayTag;
 /**
  * 
  */
@@ -29,4 +31,6 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAttributeInfo> AttributeInfo;
+private:
+	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;
 };
