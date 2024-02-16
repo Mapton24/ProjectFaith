@@ -115,6 +115,27 @@ void FPFGameplayTags::InitializeNativeGameplayTags()
 	FName("Attributes.Combat.RangedRankPotential"),
 	FString("Increases Mima ability to increase her rank.")
 	);
+
+	/*
+	 * Max Vitals
+	 */
+	GameplayTags.Attributes_Vital_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Vital.MaxHealth"),
+	FString("PC max health.")
+	);
+	GameplayTags.Attributes_Vital_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Vital.MaxMana"),
+	FString("Mima max mana.")
+	);
+	GameplayTags.Attributes_Vital_MaxGift = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Vital.MaxGift"),
+	FString("PC max gift.")
+	);
+	GameplayTags.Attributes_Vital_MaxParry = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Attributes.Vital.MaxParry"),
+	FString("PC max parry.")
+	);
+	
 }
 
 namespace PFGameplayTags

@@ -37,13 +37,17 @@ struct FPFGameplayTags
 	FGameplayTag Attributes_Rank_MeleeRankPotential;
 	FGameplayTag Attributes_Rank_RangedRankPotential;
 
+	FGameplayTag Attributes_Vital_MaxHealth;
+	FGameplayTag Attributes_Vital_MaxMana;
+	FGameplayTag Attributes_Vital_MaxGift;
+	FGameplayTag Attributes_Vital_MaxParry;
+
 private:
 	static FPFGameplayTags GameplayTags;
 };
 
 namespace PFGameplayTags
 {
-	//TODO Create own tags
 	PROJECTFAITH_API    UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_IsDead);
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_Cooldown);
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_Cost);
