@@ -47,17 +47,11 @@ struct FEffectProperties
 	ACharacter* TargetCharacter = nullptr;
 };
 
-/**
- * This macro defines a set of helper functions for accessing and initializing attributes.
- *
- * The following example of the macro:
- *		ATTRIBUTE_ACCESSORS(ULyraHealthSet, Health)
- * will create the following functions:
- *		static FGameplayAttribute GetHealthAttribute();
- *		float GetHealth() const;
- *		void SetHealth(float NewVal);
- *		void InitHealth(float NewVal);
- */
+// typedef is specific to the FGameplayAttribute() signature, but TStaticFunPtr is generic to any signature chosen
+//typedef TBaseStaticDelegateInstance<FGameplayAttribute(), FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;
+template<class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 	#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
@@ -83,6 +77,7 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	UWorld* GetWorld() const override;
 
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 
 	/*
 	 * Level Attribute

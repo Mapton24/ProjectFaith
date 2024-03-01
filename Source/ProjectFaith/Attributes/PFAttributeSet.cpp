@@ -7,12 +7,40 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "ProjectFaith/PFGameplayTags.h"
 
 #include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 
 UPFAttributeSet::UPFAttributeSet()
 {
+	const FPFGameplayTags& GameplayTags = FPFGameplayTags::Get();
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Levels_MeleeLevel, GetMeleeLevelAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Levels_RangedLevel, GetRangedLevelAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Levels_SynergyLevel, GetSynergyLevelAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeAttackDamage, GetMeleeAttackDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeCritChance, GetMeleeCritChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeCritDamage, GetMeleeCritDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeAttackSpeed, GetMeleeAttackSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MeleeCombat_MeleeSkillDamage, GetMeleeSkillDamageAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedAttackDamage, GetRangedAttackDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedCritChance, GetRangedCritChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedCritDamage, GetRangedCritDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedAttackSpeed, GetRangedAttackSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_RangedCombat_RangedSkillDamage, GetRangedSkillDamageAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Synergy_SynergyDamage, GetSynergyDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Combat_MovementSpeed, GetMovementSpeedAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxMana, GetMaxManaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxGift, GetMaxGiftAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxParry, GetMaxParryAttribute);
+
 	
+
 }
 
 void UPFAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -56,10 +84,11 @@ void UPFAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedCritDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedAttackSpeed, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedSkillDamage, COND_None, REPNOTIFY_Always);
 	//Synergy Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, SynergyDamage, COND_None, REPNOTIFY_Always);
+	//Miscellaneous
+	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
 	//Rank Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, MeleeRank, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPFAttributeSet, RangedRank, COND_None, REPNOTIFY_Always);

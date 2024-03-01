@@ -3,11 +3,52 @@
 #pragma once
 
 #include "NativeGameplayTags.h"
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+
+/*
+ * Singleton containing native Gameplay Tags
+ */
+
+struct FPFGameplayTags
+{
+	static const FPFGameplayTags& Get() { return GameplayTags;}
+	static void InitializeNativeGameplayTags();
+
+	FGameplayTag Attributes_Levels_MeleeLevel;
+	FGameplayTag Attributes_Levels_RangedLevel;
+	FGameplayTag Attributes_Levels_SynergyLevel;
+
+	FGameplayTag Attributes_MeleeCombat_MeleeAttackDamage;
+	FGameplayTag Attributes_MeleeCombat_MeleeCritChance;
+	FGameplayTag Attributes_MeleeCombat_MeleeCritDamage;
+	FGameplayTag Attributes_MeleeCombat_MeleeAttackSpeed;
+	FGameplayTag Attributes_MeleeCombat_MeleeSkillDamage;
+
+	FGameplayTag Attributes_RangedCombat_RangedAttackDamage;
+	FGameplayTag Attributes_RangedCombat_RangedCritChance;
+	FGameplayTag Attributes_RangedCombat_RangedCritDamage;
+	FGameplayTag Attributes_RangedCombat_RangedAttackSpeed;
+	FGameplayTag Attributes_RangedCombat_RangedSkillDamage;
+
+	FGameplayTag Attributes_Synergy_SynergyDamage;
+	FGameplayTag Attributes_Combat_MovementSpeed;
+	
+	FGameplayTag Attributes_Rank_MeleeRankPotential;
+	FGameplayTag Attributes_Rank_RangedRankPotential;
+
+	FGameplayTag Attributes_Vital_MaxHealth;
+	FGameplayTag Attributes_Vital_MaxMana;
+	FGameplayTag Attributes_Vital_MaxGift;
+	FGameplayTag Attributes_Vital_MaxParry;
+
+private:
+	static FPFGameplayTags GameplayTags;
+};
 
 namespace PFGameplayTags
 {
-	//TODO Create own tags
-	PROJECTFAITH_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_IsDead);
+	PROJECTFAITH_API    UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_IsDead);
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_Cooldown);
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_Cost);
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateFail_TagsBlocked);
@@ -54,6 +95,4 @@ namespace PFGameplayTags
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Flying);
 
 	PROJECTFAITH_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Custom);
-
-	
 }
