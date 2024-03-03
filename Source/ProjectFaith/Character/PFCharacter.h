@@ -86,10 +86,8 @@ protected:
 	virtual void InitAbilityActorInfo();
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	void InitializeDefaultAttributes() const;
-
-
+	void AddCharacterAbilities();
 protected:
-
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultLevelAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
@@ -104,9 +102,6 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultMaxVitalAttributes;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
-
-
-
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> RightHandWeapon;
@@ -117,6 +112,10 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
 	void K2_OnDeathFinished();
 private:
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+
 	
 
 };

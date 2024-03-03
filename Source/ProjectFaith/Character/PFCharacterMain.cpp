@@ -26,6 +26,7 @@ void APFCharacterMain::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
 void APFCharacterMain::OnRep_PlayerState()

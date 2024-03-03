@@ -223,6 +223,14 @@ void APFCharacter::InitializeDefaultAttributes() const
 
 }
 
+void APFCharacter::AddCharacterAbilities()
+{
+	UPFAbilitySystemComponent* PFASC = CastChecked<UPFAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	PFASC->AddCharacterAbilities(StartupAbilities);
+}
+
 
 void APFCharacter::InitAbilityActorInfo()
 {
