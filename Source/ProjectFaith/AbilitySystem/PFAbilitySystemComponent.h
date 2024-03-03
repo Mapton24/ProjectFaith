@@ -21,10 +21,13 @@ public:
 	void AbilityActorInfoSet();
 	FEffectAssetTags EffectAssetTags;
 	UPFAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+
 
 protected:
 
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
+
 
 	// Handles abilities that had input PRESSED this frame.
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;

@@ -28,3 +28,12 @@ void UPFAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySy
 
 	EffectAssetTags.Broadcast(TagContainer);
 }
+
+void UPFAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
+{
+	for (TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
