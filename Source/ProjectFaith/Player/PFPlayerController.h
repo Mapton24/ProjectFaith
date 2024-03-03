@@ -8,6 +8,8 @@
 
 #include "PFPlayerController.generated.h"
 
+class UPFInputConfig;
+struct FGameplayTag;
 struct FGenericTeamId;
 
 class APawn;
@@ -32,6 +34,10 @@ public:
 private:
 	void Move(const FInputActionValue& ActionValue);
 
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+
 
 protected:
 
@@ -42,6 +48,8 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> PFContext;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UPFInputConfig> InputConfig;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 

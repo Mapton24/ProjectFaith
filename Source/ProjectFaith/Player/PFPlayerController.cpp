@@ -4,6 +4,7 @@
 #include "PFPlayerController.h"
 
 #include "EnhancedInputSubsystems.h"
+#include "ProjectFaith/Input/PFInputComponent.h"
 #include "EnhancedInputComponent.h"
 
 
@@ -35,9 +36,23 @@ void APFPlayerController::Move(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		//ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
 	}
-	
-	
 }
+
+void APFPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+}
+
+void APFPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+}
+
+void APFPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
+}
+
 
 void APFPlayerController::BeginPlay()
 {
@@ -47,15 +62,18 @@ void APFPlayerController::BeginPlay()
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	check(Subsystem);
 	Subsystem->AddMappingContext(PFContext, 0);
+	
+	bShowMouseCursor = true;
+	DefaultMouseCursor = EMouseCursor::Default;
 }
 
 void APFPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFPlayerController::Move);
+	UPFInputComponent* PFInputComponent = CastChecked<UPFInputComponent>(InputComponent);
+	PFInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFPlayerController::Move);
+	PFInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 
 	
 }
