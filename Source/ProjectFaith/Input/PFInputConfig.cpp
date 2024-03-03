@@ -11,7 +11,7 @@ const UInputAction* UPFInputConfig::FindNativeInputActionForTag(const FGameplayT
 {
 	for (const FPFInputAction& Action : NativeInputActions)
 	{
-		if (Action.InputAction && (Action.InputTag == InputTag))
+		if (Action.InputAction && Action.InputTag == InputTag)
 		{
 			return Action.InputAction;
 		}
@@ -19,7 +19,7 @@ const UInputAction* UPFInputConfig::FindNativeInputActionForTag(const FGameplayT
 
 	if (bLogNotFound)
 	{
-		
+		UE_LOG(LogTemp, Error, TEXT("Can't find AbilityInputAction for InputTag [%s], on InputConfig [%s]"), *InputTag.ToString(), *GetNameSafe(this));
 	}
 	return nullptr;
 }
@@ -28,14 +28,15 @@ const UInputAction* UPFInputConfig::FindAbilityInputActionForTag(const FGameplay
 {
 	for (const FPFInputAction& Action : AbilityInputActions)
 	{
-		if (Action.InputAction && (Action.InputTag == InputTag))
+		if (Action.InputAction && Action.InputTag == InputTag)
 		{
 			return Action.InputAction;
 		}
 	}
-
 	if (bLogNotFound)
 	{
+		UE_LOG(LogTemp, Error, TEXT("Can't find AbilityInputAction for InputTag [%s], on InputConfig [%s]"), *InputTag.ToString(), *GetNameSafe(this));
 	}
 	return nullptr;
 }
+
