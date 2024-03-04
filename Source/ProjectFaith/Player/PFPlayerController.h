@@ -8,16 +8,19 @@
 
 #include "PFPlayerController.generated.h"
 
-class UPFInputConfig;
+
 struct FGameplayTag;
 struct FGenericTeamId;
+struct FFrame;
+struct FInputActionValue;
 
+class UPFInputConfig;
 class APawn;
 class UEnhancedInputComponent;
 class UInputAction;
 class UInputMappingContext;
-struct FFrame;
-struct FInputActionValue;
+class UPFAbilitySystemComponent;
+
 
 /**
  * 
@@ -53,5 +56,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY()
+	TObjectPtr<UPFAbilitySystemComponent> PFAbilitySystemComponent;
+
+	UPFAbilitySystemComponent* GetASC();
 	
 };

@@ -3,9 +3,11 @@
 
 #include "PFPlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "ProjectFaith/Input/PFInputComponent.h"
 #include "EnhancedInputComponent.h"
+#include "ProjectFaith/AbilitySystem/PFAbilitySystemComponent.h"
 
 
 APFPlayerController::APFPlayerController(const FObjectInitializer& ObjectInitializer)
@@ -45,12 +47,13 @@ void APFPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void APFPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+	GetASC()->AbilityInputTagReleased(InputTag);
 }
 
 void APFPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
+	if(GetASC() == nullptr) return;
+	GetASC()->AbilityInputTagHeld(InputTag);
 }
 
 
@@ -74,7 +77,14 @@ void APFPlayerController::SetupInputComponent()
 	UPFInputComponent* PFInputComponent = CastChecked<UPFInputComponent>(InputComponent);
 	PFInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APFPlayerController::Move);
 	PFInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+}
 
-	
+UPFAbilitySystemComponent* APFPlayerController::GetASC()
+{
+	if (PFAbilitySystemComponent == nullptr)
+	{
+		PFAbilitySystemComponent = Cast<UPFAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return PFAbilitySystemComponent;
 }
 
