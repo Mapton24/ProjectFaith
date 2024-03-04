@@ -41,9 +41,6 @@ USTRUCT(BlueprintType)
 struct FPFAbilityMontageFailureMessage
 {
 	GENERATED_BODY()
-
-public:
-
 	UPROPERTY(BlueprintReadWrite)
 		TObjectPtr<APlayerController> PlayerController = nullptr;
 
@@ -61,7 +58,7 @@ public:
  *
  *	The base gameplay ability class used by this project.
  */
-UCLASS(Abstract, HideCategories = Input, Meta = (ShortToolTip = "Base gameplay ability class used in this project."))
+UCLASS()
 class PROJECTFAITH_API UPFGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
@@ -72,6 +69,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "PF|Ability")
 	UPFAbilitySystemComponent* GetPFAbilitySystemComponentFromActorInfo() const;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	FGameplayTag StartupInputTag;
 	
 	
 
