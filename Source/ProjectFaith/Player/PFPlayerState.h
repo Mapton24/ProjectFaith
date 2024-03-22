@@ -47,6 +47,8 @@ public:
 	virtual void OnDeactivated() override;
 	virtual void OnReactivated() override;
 
+	FORCEINLINE int32 GetPlayerLevel() const {return Level; }
+
 	void SetPlayerConnectionType(EPFPlayerConnectionType NewType);
 	EPFPlayerConnectionType GetPlayerConnectionType() const { return MyPlayerConnectionType; }
 
@@ -56,6 +58,8 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_Level)
+	int32 Level = 1;
 	UPROPERTY(Replicated)
 	EPFPlayerConnectionType MyPlayerConnectionType;
 };
