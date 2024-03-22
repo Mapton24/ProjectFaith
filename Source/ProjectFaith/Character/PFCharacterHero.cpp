@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PFCharacterMain.h"
+#include "PFCharacterHero.h"
 
 #include "AbilitySystemComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -11,7 +11,7 @@
 #include "ProjectFaith/Player/PFPlayerState.h"
 #include "ProjectFaith/UI/HUD/PFHUD.h"
 
-APFCharacterMain::APFCharacterMain()
+APFCharacterHero::APFCharacterHero()
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
@@ -22,21 +22,28 @@ APFCharacterMain::APFCharacterMain()
 	
 }
 
-void APFCharacterMain::PossessedBy(AController* NewController)
+void APFCharacterHero::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfo();
 	AddCharacterAbilities();
 }
 
-void APFCharacterMain::OnRep_PlayerState()
+void APFCharacterHero::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitAbilityActorInfo();
 
 }
 
-void APFCharacterMain::InitAbilityActorInfo()
+int32 APFCharacterHero::GetPlayerLevel()
+{
+	PFPlayerState = GetPlayerState<APFPlayerState>();
+	check(PFPlayerState);
+	return PFPlayerState->GetPlayerLevel();
+}
+
+void APFCharacterHero::InitAbilityActorInfo()
 {
 	PFPlayerState = GetPlayerState<APFPlayerState>();
 	check(PFPlayerState);

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PFCharacter.h"
-#include "PFCharacterMain.generated.h"
+#include "PFCharacterHero.generated.h"
 
 class APFPlayerState;
 class USpringArmComponent;
@@ -14,16 +14,17 @@ class UCameraComponent;
  * 
  */
 UCLASS()
-class PROJECTFAITH_API APFCharacterMain : public APFCharacter
+class PROJECTFAITH_API APFCharacterHero : public APFCharacter
 {
 	GENERATED_BODY()
 
-	APFCharacterMain();
+	APFCharacterHero();
 
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 
 private:
+	virtual int32 GetPlayerLevel() override;
 	virtual void InitAbilityActorInfo() override;
 
 
