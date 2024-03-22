@@ -7,6 +7,7 @@
 #include "GameplayEffect.h"
 #include "GameplayTagAssetInterface.h"
 #include "GameFramework/Character.h"
+#include "ProjectFaith/Interaction/CombatInterface.h"
 
 #include "PFCharacter.generated.h"
 
@@ -42,7 +43,7 @@ struct FPFReplicatedAcceleration
 };
 
 UCLASS(Abstract, Config = Game, Meta = (ShortTooltip = "Base character pawn class"))
-class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface, public IAbilitySystemInterface
+class PROJECTFAITH_API APFCharacter : public ACharacter, public IGameplayTagAssetInterface, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -87,6 +88,8 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	void InitializeDefaultAttributes() const;
 	void AddCharacterAbilities();
+	//CombatInterface
+	virtual FVector GetCombatSocketLocation() override;
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultLevelAttributes;
@@ -105,6 +108,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> RightHandWeapon;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()

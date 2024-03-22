@@ -31,10 +31,6 @@ APFCharacter::APFCharacter(const FObjectInitializer& ObjectInitializer)
 	NewLocation.Z = -88.00f;
 	MeshComponent->SetWorldLocation(NewLocation);
 
-	// HealthComponent = CreateDefaultSubobject<UPFHealthComponent>(TEXT("HealthComponent"));
-	// HealthComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
-	// HealthComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
-
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, 1.0f, 0.0f));
 
@@ -229,6 +225,12 @@ void APFCharacter::AddCharacterAbilities()
 	if (!HasAuthority()) return;
 
 	PFASC->AddCharacterAbilities(StartupAbilities);
+}
+
+FVector APFCharacter::GetCombatSocketLocation()
+{
+	check(RightHandWeapon);
+	return RightHandWeapon->GetSocketLocation(WeaponTipSocketName);
 }
 
 
