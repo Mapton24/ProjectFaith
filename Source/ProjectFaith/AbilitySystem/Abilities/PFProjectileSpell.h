@@ -6,6 +6,7 @@
 #include "PFGameplayAbility.h"
 #include "PFProjectileSpell.generated.h"
 
+class APFProjectile;
 /**
  * 
  */
@@ -18,5 +19,12 @@ protected:
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		                         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	
+
+	UFUNCTION(BlueprintCallable, Category="Projectile")
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<APFProjectile> ProjectileClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };
