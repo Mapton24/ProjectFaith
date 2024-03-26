@@ -58,7 +58,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_Level)
+	UPROPERTY(VisibleAnywhere)
 	int32 Level = 1;
 	UPROPERTY(Replicated)
 	EPFPlayerConnectionType MyPlayerConnectionType;
