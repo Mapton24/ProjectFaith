@@ -233,6 +233,11 @@ FVector APFCharacter::GetCombatSocketLocation()
 	return RightHandWeapon->GetSocketLocation(WeaponTipSocketName);
 }
 
+APawn* APFCharacter::GetOwnerPawn() const
+{
+	return const_cast<APFCharacter*>(this);
+}
+
 
 void APFCharacter::InitAbilityActorInfo()
 {

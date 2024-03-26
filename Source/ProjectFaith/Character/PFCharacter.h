@@ -90,6 +90,7 @@ protected:
 	void AddCharacterAbilities();
 	//CombatInterface
 	virtual FVector GetCombatSocketLocation() override;
+	virtual APawn* GetOwnerPawn() const override;
 protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultLevelAttributes;
@@ -116,12 +117,10 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName="OnDeathFinished"))
 	void K2_OnDeathFinished();
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
-	
-
-	
 
 };
 
