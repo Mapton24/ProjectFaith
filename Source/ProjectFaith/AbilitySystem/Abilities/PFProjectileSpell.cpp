@@ -18,7 +18,7 @@ void UPFProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	UKismetSystemLibrary::PrintString(this, FString("ActivateAbility (C++)"), true, true, FLinearColor::Yellow, 3);
 }
 
-void UPFProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UPFProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, bool isHoming)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
@@ -27,7 +27,25 @@ void UPFProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
-		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		FRotator Rotation;
+
+		if (isHoming)
+		{
+			Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		}
+		else
+		{
+			APawn* OwnerPawn = CombatInterface->GetOwnerPawn();
+			if (OwnerPawn)
+			{
+				Rotation = OwnerPawn->GetActorRotation();
+			}
+			else
+			{
+				Rotation = FRotator::ZeroRotator;
+			}
+		}
+
 		Rotation.Pitch = 0.0f;
 
 		FTransform SpawnTransform;
